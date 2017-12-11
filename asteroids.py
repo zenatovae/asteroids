@@ -1,5 +1,8 @@
 import pyglet
+import math
 
+ACCELERATION = 300
+ROTATION_SPEED = 4
 window = pyglet.window.Window()
 pressed_keys = set()
 
@@ -20,17 +23,19 @@ class Spaceship:
     def draw(self):
         self.sprite.x = self.x
         self.sprite.y = self.y
-        self.sprite.rotation = self.rotation
+        self.sprite.rotation = 90 - math.degrees(self.rotation)
         self.sprite.draw()
 
     def tick(self, dt):
         self.x += self.x_speed * dt
         self.y += self.y_speed * dt
         if pyglet.window.key.LEFT in pressed_keys:
-            self.rotation -=4
+            self.rotation += ROTATION_SPEED *dt
         if pyglet.window.key.RIGHT in pressed_keys:
-            self.rotation +=4
-    #def move
+            self.rotation -= ROTATION_SPEED *dt
+        if pyglet.window.key.UP in pressed_keys:
+            self.x_speed += math.cos(self.rotation) * ACCELERATION * dt
+            self.y_speed += math.cos(self.rotation) * ACCELERATION * dt
 
 spaceship = Spaceship()
 
