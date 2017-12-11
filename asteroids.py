@@ -12,8 +12,8 @@ spaceship_imp.anchor_y = spaceship_imp.height //2
 
 class Spaceship:
     def __init__(self):
-        self.x = 0
-        self.y = 0
+        self.x = window.width /2
+        self.y = window.height /2
         self.rotation = 0
         self.x_speed = 50
         self.y_speed = 100
@@ -36,6 +36,17 @@ class Spaceship:
         if pyglet.window.key.UP in pressed_keys:
             self.x_speed += math.cos(self.rotation) * ACCELERATION * dt
             self.y_speed += math.cos(self.rotation) * ACCELERATION * dt
+
+        self.x %=window.width
+        self.y %=window.height
+    """    while self.x > window.width:
+            self.x -= window.width
+        while self.y > window.height:
+            self.y -= window.height
+        while self.x < 0:
+            self.x += window.width
+        while self.x < 0:
+            self.x += window.height"""
 
 spaceship = Spaceship()
 
