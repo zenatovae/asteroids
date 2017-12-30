@@ -6,6 +6,8 @@ ROTATION_SPEED = 4
 window = pyglet.window.Window()
 pressed_keys = set()
 
+objects = []
+
 spaceship_imp = pyglet.image.load("resources/PNG/playerShip2_red.png")
 spaceship_imp.anchor_x = spaceship_imp.width //2
 spaceship_imp.anchor_y = spaceship_imp.height //2
@@ -48,16 +50,24 @@ class Spaceship:
         while self.x < 0:
             self.x += window.height"""
 
-spaceship = Spaceship()
+objects.append(Spaceship())
+
+N = 100
+for i in range(N):
+    spaceship = Spaceship()
+    objects.append(spaceship)
+    spaceship.rotation = math.pi * 2 / N * i
 
 def tick(dt):
-    spaceship.tick(dt)
+    for obj in objects:
+        obj.tick(dt)
 
 pyglet.clock.schedule_interval(tick, 1/30)
 
 def draw():
     window.clear()
-    spaceship.draw()
+    for obj in objects:
+        obj.draw()
 
 def key_press(symbol, mod):
     pressed_keys.add(symbol)
