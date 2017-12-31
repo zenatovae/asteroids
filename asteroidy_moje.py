@@ -1,21 +1,20 @@
 import pyglet
 import math
+import random, os
 
-spaceship_image = pyglet.image.load('resources\PNG\playerShip3_blue.png')
-spaceship_image.anchor_x = spaceship_image.width // 2
-spaceship_image.anchor_y = spaceship_image.height // 2
-
-window = pyglet.window.Window(width=800, height=600)
+window = pyglet.window.Window(width=900, height=700)
 
 batch = pyglet.graphics.Batch()
 objects = []
 pressed_keys = set()
 ROTATION_SPEED = 200
-ACCELERATION = 300
 
 
 class Spaceship:
     def __init__(self):
+        spaceship_image = pyglet.image.load('resources\PNG\playerShip3_blue.png')
+        spaceship_image.anchor_x = spaceship_image.width // 2
+        spaceship_image.anchor_y = spaceship_image.height // 2
         self.x = window.width // 2
         self.y = window.height // 2
         self.rotation = 90
@@ -67,8 +66,48 @@ class Spaceship:
         self.y_speed = math.cos(angle_radians) * self.acceleration * dt
 
 
+class Asteroid:
+    def __init__(self):
+        path = r"resources/PNG/Meteors"
+        random_filename = random.choice([
+            x for x in os.listdir(path)
+            if os.path.isfile(os.path.join(path, x))
+        ])
+        random_path = "resources/PNG/Meteors/" + random_filename
+        asteroid_image = pyglet.image.load(random_path)
+        asteroid_image.anchor_x = asteroid_image.width // 2
+        asteroid_image.anchor_y = asteroid_image.height // 2
+        self.x = random.uniform(0, window.width)
+        self.y = random.uniform(0, window.height)
+        self.rotation_on_site = random.randrange(0, 2)
+        self.x_speed = random.randrange(-50, 50)
+        self.y_speed = random.randrange(-50, 50)
+        self.rotation = 0
+        self.sprite = pyglet.sprite.Sprite(asteroid_image, batch=batch)
+
+    def draw(self):
+        self.sprite.x = self.x
+        self.sprite.y = self.y
+        self.sprite.rotation = self.rotation
+        self.sprite.draw()
+
+    def tick(self, dt):
+        if self.rotation_on_site == 0:
+            self.rotation -= ROTATION_SPEED * dt
+        if self.rotation_on_site == 1:
+            self.rotation += ROTATION_SPEED * dt
+        self.x = self.x + dt * self.x_speed
+        self.y = self.y + dt * self.y_speed
+        self.x %= window.width
+        self.y %= window.height
+
+
 spaceship = Spaceship()
 objects.append(spaceship)
+
+for i in range(10):
+    asteroid = Asteroid()
+    objects.append(asteroid)
 
 
 def draw_all_objects():
