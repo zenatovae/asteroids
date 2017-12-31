@@ -129,8 +129,8 @@ class Asteroid(SpaceObject):
         else:
             self.radius = asteroid_image.width // 2
         print(self.radius)
-        self.x = random.uniform(0, window.width)
-        self.y = random.uniform(0, window.height)
+        self.x = random.uniform(window.width, window.width + 50)
+        self.y = random.uniform(window.height, window.height + 50)
         self.rotation_on_site = random.randrange(0, 2)
         self.x_speed = random.randrange(-50, 50)
         self.y_speed = random.randrange(-50, 50)
